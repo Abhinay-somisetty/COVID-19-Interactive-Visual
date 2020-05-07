@@ -107,16 +107,18 @@
 </style>
 <head>
     <h1 style="color:rgba(54,132,17,0.5);" align="center"> &nbsp;Impact of covid-19 across the globe</h1><br>
-    <p >This visualization demonstrates the number of COVID cases across the globe of April 9th. The
-        dataset is provided by WHO.
-        In the below visual the countries with lighter blue has very less cases and countries with higher cases is colored with red. The color range is from Blue to Red.
-        Also there is a feature to zoom in and zoom out by pinching into any specific country.
+    <p >This visualization demonstrates the number of COVID cases across the globe as of April 9th. The
+        data is provided by WHO.
+        In the below visual the countries with lighter blue has very less cases and countries with higher cases is
+        colored with red. The color range is from Blue to Red.
+        Mouseover on any country to see the Covid-19 recent stats. Clicking on any country will navigate to a new screen which shows day wise stats of the country selected.
 </head>
 <body style="background-image: url('image/black.jpg'); background-repeat: no-repeat;background-size:cover;background-position: center; ">
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="https://d3js.org/queue.v1.min.js"></script>
 <script src="https://d3js.org/topojson.v1.min.js"></script>
 <script src="d3-tip.js"></script>
+<script src="colorbrewer.min.js"></script>
 
 <div id="country" class="svg-container">
 
@@ -157,11 +159,19 @@
         width = body.width,
         height = 700 - margin.top - margin.bottom;
 
+
     var color = d3.scale.threshold()
         .domain([1,10, 100, 200, 500, 750, 1000, 2500, 5000, 7500, 10000, 20000, 35000, 50000, 100000, 200000, 3000000, 360000])
-            .range(["rgb(197,221,245)","rgb(152,172,255)", "rgb(217,231,245)", "rgb(107,150,245)", "rgb(113,168,245)", "rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)", "rgb(33,113,181)", "rgb(8,81,156)", "rgb(8,48,107)", "rgb(3,19,43)",
+        .range(["rgb(197,221,245)","rgb(152,172,255)", "rgb(217,231,245)", "rgb(107,150,245)", "rgb(113,168,245)", "rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)", "rgb(33,113,181)", "rgb(8,81,156)", "rgb(8,48,107)", "rgb(3,19,43)",
             "rgb(102,57,62)","rgb(102,34,35)","rgb(102,4,9)"])
-            ;
+    ;
+    var colorScale = d3.scale.quantize()
+        .domain([1, 90000])
+        .range(colorbrewer.Blues[12]);
+
+
+
+
 
     var path = d3.geo.path();
 
@@ -171,7 +181,7 @@
         .attr("width", width)
         .attr("height", height)
         .append('g')
-        .call(d3.behavior.zoom()
+    .call(d3.behavior.zoom()
             .scaleExtent([1, 8])
             .on("zoom", function () {
                 svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
@@ -302,13 +312,13 @@
 <br>
 
     <div style="width:1400px;">
-        <div style="float: left; width: 130px">
-            <form id="thisone" action="index.html" method="get">
+        <div style="float: left; width: 130px;padding-left:50px">
+            <form id="thisone" action="index.html" method="post">
                 <button class="button" type="submit"  value="Previous" style="color:#64dfff;" >Previous</button>
             </form>
         </div>
-        <div style="float: right; width: 1px ">
-            <form id="thistoo" action="index2.html" method="get" align="right">
+        <div style="float: right; width: 1px;padding-right:50px ">
+            <form id="thistoo" action="index2.html" method="post" align="right">
                 <button class="button" type="submit"  value="Next" style="color:#64dfff;" >Next</button>
                <!-- <button class="button" type="submit" style="color:#64dfff;">Previous</button>-->
             </form>
