@@ -172,38 +172,9 @@
 </div>
 <div>
 
-           <!-- <span class="position">
-           <img src="corona.jpg" width="200" height="150">
-            </span>-->
 </div>
-   <!-- <button onclick="myFunction()">Know me</button>
-
-<h2>Modal Example</h2>-->
-
-
 
 <div id='vis-container' xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" align="center" ></div>
-
-<!--
-   body {
-            background-image: url('world.jpg');
-            background-repeat: no-repeat;
-            background-size: 100%;
-
-        }
-
-//style="margin: 200px"
-
-
-
-
-<center><div style = 'padding-bottom: 25px'>
-
-    <p>Let's now explore gender biased statistics</p><a href="ratio.html"> Sex Ratio of Players with respect to Sports.</a>
-
-</div></center>
-
--->
  <footer style="float: right;color:#0ea2ff; padding-right: 75px"><left><p>Designed By: Abhinay, Hemanth, Sheryl</p></left></footer>
 
 
@@ -223,18 +194,14 @@
         var country;
         data.forEach(function(d) {
             country = d.Country_Name;
-            //console.log(country);
             countryMap[country] = [];
-            //console.log(countryMap[country]);
-            // { countryName: [ bar1Val, bar2Val, ... ] }
             years.forEach(function(field) {
                 countryMap[country].push( +d[field] );
             });
 
             //console.log(countryMap);
         });
-        //var count = Object.keys(countryMap[country]).length;
-        //console.log(countryMap);
+
         delete countryMap['']
         makeVis(countryMap);
 
@@ -420,21 +387,6 @@
 <form style="padding-top: 75px;padding-left: 25px; padding-bottom: 50px" ;  method="get" action="index1.html" >
     <button class="button" type="submit" style="color:#64dfff;">Previous</button>
 </form>
-<!--<form style="padding-top: 25px;padding-right: 25px; padding-bottom: 50px" ;  method="get" action="index.html" align="right">
-    <button class="button" type="submit" style="color:#64dfff;">Next</button>
-</form>
 
-<div style="width:1400px;">
-    <div style="float: left; width: 130px">
-        <form id="thisone" action="index1.html" method="post">
-            <input class="button" type="submit" name = "Previous" value="Previous" style="color:#64dfff;" >
-        </form>
-    </div>
-    <div style="float: right; width: 1px ">
-        <form id="thistoo" action="index1.html" method="post" align="right">
-            <input class="button" type="submit" name = "Next" value="Next" style="color:#64dfff;" >
-        </form>
-    </div>
-</div>-->
 </body>
 </html>
