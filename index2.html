@@ -6,6 +6,8 @@
     <title>Final Project</title>
     <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script src="d3-tip.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.6.3/d3-tip.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Courgette" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.css" />
     <style>
@@ -15,15 +17,16 @@
             display: block;
         }
         .bar {
-            fill: #ff0c1c;
+            fill: #188fff;
             opacity: 0.8;
         }
 
         .axis path,
         .axis line {
             fill: none;
-            stroke: #000;
+            stroke: #f2fff0;
             shape-rendering: optimizeSpeed;
+
         }
         .position {
             float:right;
@@ -43,7 +46,7 @@
             position: fixed; /* Stay in place */
             z-index: 1; /* Sit on top */
             padding-top: 100px;
-           /* padding-bottom: 100px; Location of the box */
+            /* padding-bottom: 100px; Location of the box */
             left: 0;
             top: 0;
             width: 100%; /* Full width */
@@ -101,10 +104,13 @@
             margin: 4px 2px;
             cursor: pointer;
         } /* Blue */
+
     </style>
 </head>
-<body style="background-image: url('image/UN.png'); background-repeat: no-repeat;background-size: 30% 25%;background-position: center; ">
-<!--<body style="background-image: url('white.jpg'); background-repeat: no-repeat;background-size:cover;background-position: center; ">-->
+<!--<body style="background-image: url('image/UN.png'); background-repeat: no-repeat;background-size: 30% 25%;background-position: center; ">
+<body style="background-image: url('white.jpg'); background-repeat: no-repeat;background-size:cover;background-position: center; ">
+<body style="background-color: #f2fff0;">-->
+<body style="background-image: url('image/black.jpg'); background-repeat: no-repeat;background-size:cover;background-position: center;">
 <div>
     <center><h2 style="color:#5c3438;font-size:250%;" ><b>Day-Wise Corona Cases in each country</b></h2>
 
@@ -167,7 +173,7 @@
         </div>
 
     </div>
-    <h3 style="color:rgba(34,40,41,0.75);font-size:150%;font-family:verdana;" align="center"><b>Country</b></h3>
+    <h3 style="color:rgba(255,255,204,0.75);font-size:150%;font-family:verdana;" align="center"><b>Country</b></h3>
     <p></p>
 </div>
 <div>
@@ -175,15 +181,15 @@
 </div>
 
 <div id='vis-container' xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" align="center" ></div>
- <footer style="float: right;color:#0ea2ff; padding-right: 75px"><left><p>Designed By: Abhinay, Hemanth, Sheryl</p></left></footer>
+<footer style="float: right;color:#0ea2ff; padding-right: 75px"><left><p>Designed By: Abhinay, Hemanth, Sheryl</p></left></footer>
 
 
 
 <script type="text/javascript">
     // Load and munge data, then make the visualization.
-   // console.log(svg-container.d)
+    // console.log(svg-container.d)
     var fileName = "data/new_who.csv";
-    var years = ["1/9","1/10","1/11","1/12","1/13","1/14","1/15","1/16","1/17","1/18","1/19","1/20","1/21","1/22","1/23","1/24","1/25","1/26","1/27","1/28","1/29","1/30","1/31","2/1","2/2","2/3","2/4","2/5","2/6","2/7","2/8","2/9","2/10","2/11","2/12","2/13","2/14","2/15","2/16","2/17","2/18","2/19","2/20","2/21","2/22","2/23","2/24","2/25","2/26","2/27","2/28","2/29","3/1","3/2","3/3","3/4","3/5","3/6","3/7","3/8","3/9","3/10","3/11","3/12","3/13","3/14","3/15","3/16","3/17","3/18","3/19","3/20","3/21","3/22","3/23","3/24","3/25","3/26","3/27","3/28","3/29","3/30","3/31","4/1","4/2","4/3","4/4","4/5","4/6","4/7","4/8","4/9"];
+    var years = ["16-Feb","17-Feb","18-Feb","19-Feb","20-Feb","21-Feb","22-Feb","23-Feb","24-Feb","25-Feb","26-Feb","27-Feb","28-Feb","29-Feb","1-Mar","2-Mar","3-Mar","4-Mar","5-Mar","6-Mar","7-Mar","8-Mar","9-Mar","10-Mar","11-Mar","12-Mar","13-Mar","14-Mar","15-Mar","16-Mar","17-Mar","18-Mar","19-Mar","20-Mar","21-Mar","22-Mar","23-Mar","24-Mar","25-Mar","26-Mar","27-Mar","28-Mar","29-Mar","30-Mar","31-Mar","1-Apr","2-Apr","3-Apr","4-Apr","5-Apr","6-Apr","7-Apr","8-Apr","9-Apr"];
 
     // d3.csv(fileName, function(error,data){
     //     console.log(data);
@@ -191,6 +197,7 @@
 
     d3.csv(fileName, function(error, data) {
         var countryMap = {};
+        var date = {};
         var country;
         data.forEach(function(d) {
             country = d.Country_Name;
@@ -214,15 +221,15 @@
         var margin = { top: 30, right: 50, bottom: 30, left: 50 },
             width  = 1000 - margin.left - margin.right,
             //width = body.width,
-           // console.log(width);
+            // console.log(width);
             height = 500 - margin.top  - margin.bottom;
         console.log(width);
         // Make x scale
         var xScale = d3.scale.ordinal()
             .domain(years)
             //.range([width, 0]);
-            .rangeRoundBands([0, 1400], 0.1);
-
+            .rangeRoundBands([0, 1400], 0.1)
+            ;
         // Make y scale, the domain will be defined on bar update
         var yScale = d3.scale.linear()
             .range([height, 0]);
@@ -239,7 +246,8 @@
         var xAxis = d3.svg.axis()
             .scale(xScale)
             .orient("bottom")
-           ;
+
+        ;
         //.tickFormat(d3.time.format("%m-%d-%y"));
 
         canvas.append("g")
@@ -251,6 +259,7 @@
             .call(xAxis)
             .selectAll("text")
             .style("text-anchor", "end")
+            .style("fill","white")
             .attr("dx", "-.1em")
             .attr("dy", ".15em")
             .attr("transform", "rotate(-80)");
@@ -262,13 +271,15 @@
 
         var yAxisHandleForUpdate = canvas.append("g")
             .attr("class", "y axis")
+            .style("fill","white")
             .call(yAxis);
 
-       yAxisHandleForUpdate.append("text")
+        yAxisHandleForUpdate.append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", 6)
             .attr("dy", ".700em")
             .style("text-anchor", "end")
+            .style("fill","red")
             .text("Number of Corona Cases");
 
         var updateBars = function(data) {
@@ -312,7 +323,7 @@
             if (newcountry === undefined){
                 newcountry = d3.select('#drop_down_id').property('value');
             }
-                newData   = countryMap[newcountry];
+            newData   = countryMap[newcountry];
 
             updateBars(newData);
         };
@@ -376,17 +387,20 @@
         }
     }
 </script>
-<br><br><p style ="padding-left: 50px;padding-right:50px">
-    Stay aware of the latest information on the COVID-19 outbreak, available on the
-    <a href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public">WHO website</a>
 
-    and through your national and local public health authority. Most countries around the world have seen cases of COVID-19 and
-    many are experiencing outbreaks. Authorities in China and some other countries have succeeded in slowing their outbreaks.
-    However, the situation is unpredictable so check regularly for the latest news.
-</p>
-<form style="padding-top: 75px;padding-left: 25px; padding-bottom: 50px" ;  method="get" action="index1.html" >
-    <button class="button" type="submit" style="color:#64dfff;">Previous</button>
-</form>
 
+
+
+        <p class="lead"style ="font-family:Consolas;font-size:16px;color:antiquewhite" >Stay aware of the latest information on the COVID-19 outbreak, available on the
+            <a style="color:white;text-decoration: underline" href="https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public">WHO website</a>
+
+            and through your national and local public health authority. Most countries around the world have seen cases of COVID-19 and
+            many are experiencing outbreaks. Authorities in China and some other countries have succeeded in slowing their outbreaks.
+            However, the situation is unpredictable so check regularly for the latest news.</p >
+
+    </div>
+    <form style="padding-top: 75px;padding-left: 25px; padding-bottom: 50px" ;  method="get" action="index1.html" >
+        <button class="button" type="submit" style="color:#64dfff;">Previous</button>
+    </form>
 </body>
 </html>

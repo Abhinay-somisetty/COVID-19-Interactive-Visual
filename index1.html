@@ -95,29 +95,55 @@
     }
 
     p {
-        color: #fbfdff;
+        color: #20a7ff;
         font-family: courier;
         font-size: 100%;
-        border: 2px solid powderblue;
-        /* margin: 50px;*/
+        /*border: 2px solid powderblue;
+         margin: 50px;*/
         padding: 30px;
         padding-left: 50px;
         padding-right:50px;
     }
+    .legend {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 60%;
+        color: white; //added, but doesn't work
+    }
+    .legendLinear text.label {
+        fill: '#ffffff';
+    }
+
+    li.key {
+        border-top-width: 15px;
+        border-top-style: solid;
+        font-size: .75em;
+        width: 10%;
+        padding-left: 0;
+        padding-right: 0;
+    }
 </style>
 <head>
-    <h1 style="color:rgba(54,132,17,0.5);" align="center"> &nbsp;Impact of covid-19 across the globe</h1><br>
-    <p >This visualization demonstrates the number of COVID cases across the globe as of April 9th. The
+   <!-- <h1 style="color:rgba(54,132,17,0.5);" align="center"> &nbsp;Impact of covid-19 across the globe</h1><br>
+    <p>This visualization demonstrates the number of COVID cases across the globe as of April 9th. The
         data is provided by WHO.
         In the below visual the countries with lighter blue has very less cases and countries with higher cases is
         colored with red. The color range is from Blue to Red.
         Mouseover on any country to see the Covid-19 recent stats. Clicking on any country will navigate to a new screen which shows day wise stats of the country selected.
+    </p>-->
         </head>
 <body style="background-image: url('image/black.jpg'); background-repeat: no-repeat;background-size:cover;background-position: center; ">
+
 <script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://d3js.org/queue.v1.min.js"></script>
 <script src="https://d3js.org/topojson.v1.min.js"></script>
 <script src="d3-tip.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/1.13.0/d3-legend.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+
 
 <div id="country" class="svg-container">
 
@@ -130,6 +156,7 @@
         </defs>
     </svg>
 </div>
+
 <script>
 
     var format = d3.format(",");
@@ -157,27 +184,23 @@
 
     var color = d3.scale.threshold()
         .domain([1,10, 100, 200, 500, 750, 1000, 2500, 5000, 7500, 10000, 20000, 35000, 50000, 100000, 200000, 3000000, 360000])
-        .range(["rgb(197,221,245)","rgb(152,172,255)", "rgb(217,231,245)", "rgb(107,150,245)", "rgb(113,168,245)", "rgb(222,235,247)", "rgb(198,219,239)", "rgb(158,202,225)", "rgb(107,174,214)", "rgb(66,146,198)", "rgb(33,113,181)", "rgb(8,81,156)", "rgb(8,48,107)", "rgb(3,19,43)",
+        .range(["rgb(217,231,245)","rgb(222,235,247)","rgb(197,221,245)", "rgb(198,219,239)", "rgb(158,202,225)","rgb(152,172,255)","rgb(107,150,245)", "rgb(113,168,245)",    "rgb(107,174,214)", "rgb(66,146,198)", "rgb(33,113,181)", "rgb(8,81,156)", "rgb(8,48,107)", "rgb(3,19,43)",
             "rgb(102,57,62)","rgb(102,34,35)","rgb(102,4,9)"])
     ;
 
     var path = d3.geo.path();
-
+    //var dataUrl =
     var svg = d3.select("body")
         .append("svg")
         .attr("width", width)
         .attr("height", height)
         .append('g')
-        .call(d3.behavior.zoom()
-            .scaleExtent([1, 8])
-            .on("zoom", function () {
-                svg.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
-            }))
         .attr('class', 'map');
 
     var projection = d3.geo.mercator()
         .scale(130)
         .translate([width / 2, height / 1.5]);
+
 
     var path = d3.geo.path().projection(projection);
 
@@ -187,6 +210,25 @@
         .defer(d3.json, 'data/world_countries.txt')
         .defer(d3.csv, 'data/COVID1-19.csv')
         .await(ready);
+
+    var g = svg.append("g")
+        .attr("class", "legendThreshold")
+        .attr("transform", "translate(20,20)");
+    g.append("text")
+        .attr("class", "caption")
+        .attr("x", 0)
+        .attr("y", -6)
+        .text("Confirmed Cases")
+        .style("fill", "white");
+    //var labels = ['0', '1-5', '6-10', '11-25', '26-100', '101-1000', '> 1000'];
+    var labels = ['1','10', '100', '200', '500', '750', '1000', '2500', '5000', '7500', '10000', '20000', '35000', '50000', '100000', '200000', '3000000', '360000'];
+    var legend = d3.legendColor()
+        .labels(function (d) { return labels[d.i]; })
+        .shapePadding(4)
+        .scale(color);
+    svg.select(".legendThreshold")
+        .call(legend)
+        .style("fill", "white");
 
     function ready(error, data, Confirmed_Cases) {
         var confCasesById = {};
@@ -224,6 +266,7 @@
             .enter().append("path")
             .attr("d", path)
             .attr("cursor", "pointer")
+            //.attr("data-legend",function(d) { return d.name})
             .style("fill", function (d) {
                 return color(confCasesById[d.id]);
             })
@@ -252,7 +295,7 @@
             })
             .on('click', function (d){
                 console.log("kk",d.properties.name);
-                var newWindow = window.open("index2.html"+"?country="+d.country_name);
+                var newWindow = window.open("index2.html"+"?country="+d.country_name,"_self");
                 svg = d3.select(newWindow.document.body);
                 // newWindow.document.write("<p>This is 'MsgWindow'. I am 200px wide and 100px tall!</p>");
                 return "This is data element #" + d;
@@ -275,18 +318,7 @@
 <br>
 <br>
 
-<div style="width:1400px;">
-    <div style="float: left; width: 130px;padding-left:50px">
-        <form id="thisone" action="index.html" method="get">
-            <button class="button" type="submit"  value="Previous" style="color:#64dfff;" >Previous</button>
-        </form>
-    </div>
-    <div style="float: right; width: 1px;padding-right:50px ">
-        <form id="thistoo" action="index2.html" method="get" align="right">
-            <button class="button" type="submit"  value="Next" style="color:#64dfff;" >Next</button>
-        </form>
-    </div>
-</div>
+
 
 
 
